@@ -1,11 +1,19 @@
 from Derivatives import leftDer, rightDer, threePointsDer, threePointsDerLeft, threePointsDerRight
 from Integrals import leftRectMethod, rightRectMethod, midRectMethod, SimpsonMethod, trapezoidMethod, calcFunc
-
+import numpy as np
 a = 0  # start of the interval
-b = 5  # end of the interval
-h = 0.0001  # step
-n = (b - a) / h  # number of points
-x = 3
+b = np.pi  # end of the interval
+
+# a = 0
+# b = 5
+
+h = 0.1  # 1x accuracy
+h = 0.05  # 2x accuracy
+h = 0.025  # 4x accuracy
+h = 0.0125  # 8x accuracy
+h = 0.00625  # 16x accuracy
+
+x = np.pi
 
 if __name__ == '__main__':
     print("Function's value at the given point x:", calcFunc(x), '\n')
