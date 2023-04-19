@@ -1,19 +1,43 @@
 from Function import calcFunc
 
-def leftRectMethod(x, h):
-    return h * calcFunc(x - h)
+def leftRectMethod(a, b, h):
+    sum = 0
+    x = a
+    while x < b:
+        sum += h * calcFunc(x - h)
+        x += h
+    return sum
+
+def rightRectMethod(a, b, h):
+    sum = 0
+    x = a
+    while x < b:
+        sum += h * calcFunc(x + h)
+        x += h
+    return sum
 
 
-def rightRectMethod(x, h):
-    return h * calcFunc(x + h)
+def midRectMethod(a, b, h):
+    sum = 0
+    x = a
+    while x < b:
+        sum += h * calcFunc(x - h / 2)
+        x += h
+    return sum
 
 
-def midRectMethod(x, h):
-    return h * calcFunc(x - h / 2)
+def trapezoidMethod(a, b, h):
+    sum = 0
+    x = a
+    while x < b:
+        sum += (h / 2) * (calcFunc(x - h) + calcFunc(x))
+        x += h
+    return sum
 
-
-def trapezoidMethod(x, h):
-    return (h / 2) * (calcFunc(x - h) + calcFunc(x))
-
-def SimpsonMethod(x, h):
-    return (h / 6) * (calcFunc(x - h) + 4 * calcFunc(x - h / 2) + calcFunc(x))
+def SimpsonMethod(a, b, h):
+    sum = 0
+    x = a
+    while x < b:
+        sum += (h / 6) * (calcFunc(x - h) + 4 * calcFunc(x - h / 2) + calcFunc(x))
+        x += h
+    return sum
