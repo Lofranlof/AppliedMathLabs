@@ -1,40 +1,49 @@
 import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from VanillaGradient import makeGraph
+from VanillaGradient import func1, func2, func3, df1_x, df1_y, df2_x, df2_y, df3_x, df3_y
 
+plt.rcParams["figure.figsize"] = (20, 15)
+mpl.rcParams["axes.unicode_minus"] = False
 
-def f(x, y):
-    return x**2 + 2*y**2
+def gradientArmijo(title,f, df_x, df_y,  x0, y0, eps, alpha, a, b):
+    x_list, y_list= [], []
 
+    x_list.append(x0)
+    y_list.append(y0)
 
-def gradient(x):
-    # Пример градиента для функции f(x, y) = x^2 + 2y^2
-    grad = np.array([2 * x[0], 4 * x[1]])
-    return grad
+    last_x, last_y = x0, y0
+    curr_x = last_x - alpha * df_x(last_x, last_y)
+    curr_y = last_y - alpha * df_y(last_x, last_y)
+    counter = 1
+    while(abs(f(curr_x, curr_y)-f(last_x, last_y)) > eps):
+        x_list.append(curr_x)
+        y_list.append(curr_y)
 
+        last_x, last_y = curr_x, curr_y
+        if(f(curr_x, curr_y)>f(last_x, last_y)):
+            alpha *= 0.5
+        curr_x = last_x - alpha * df_x(last_x, last_y)
+        curr_y = last_y - alpha * df_y(last_x, last_y)
+        counter += 1
 
-def armijo_line_search(x, grad, func, alpha=0.1, beta=0.5):
-    t = 0.1
-    while func(x - t * grad) > func(x) - alpha * t * np.linalg.norm(grad)**2:
-        t *= beta
-    return t
+    title = title + "\nCrushed Step"
+    makeGraph(title, a, b, f, x_list, y_list)
 
+    print("Gradient descent with crushed step")
+    print("Number of iterations:", counter)
+    print("x:", curr_x)
+    print("y:", curr_y, "\n")
 
-def gradient_descent_armijo(stepSize, num_iterations, func, grad_func):
-    # Начальные значения переменных
-    x = np.array([5.0, 6.0])
+title = "Function: cos(x) + y^2"
+print(title)
+gradientArmijo(title, func1, df1_x, df1_y, 2, 4, 0.00001, 0.5, -5, 5)
 
-    # Итерационный процесс градиентного спуска
-    for i in range(num_iterations):
-        grad = grad_func(x)
-        t = armijo_line_search(x, grad, func)
-        x = x - t * grad
+title = "Function: x^2 + y^2 - xy"
+print(title)
+gradientArmijo(title, func2, df2_x, df2_y, 5, 8, 0.00001, 0.5, -10, 10)
 
-    return x
-
-
-# Параметры градиентного спуска
-stepSize = 1.0
-iterations = 100
-
-# Запуск градиентного спуска с условием Армихо
-result = gradient_descent_armijo(stepSize, iterations, f, gradient)
-print("Result: ", result)
+title = "Function:  x^2 + 1/2*y^2 - yx + 4y"
+print(title)
+gradientArmijo(title, func3, df3_x, df3_y, -15, 15, 0.00001, 0.6, -18, 18)
